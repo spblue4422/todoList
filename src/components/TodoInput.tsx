@@ -15,6 +15,7 @@ const InputBox = styled.input``;
 const InputButton = styled.button``;
 
 const TodoInput: React.FC<TodoInputProps> = ({ addFunc }) => {
+  const priorityList = ['Highest', 'High', 'Medium', 'Low', 'Lowest'];
   const { input, setInput } = useInputStore(state => state);
 
   const inputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +31,7 @@ const TodoInput: React.FC<TodoInputProps> = ({ addFunc }) => {
 
   return (
     <InputContainer>
-      <select name="priority">
+      <select name="priority" onChange={e => setInput(input.text, e.target.value)} value={input.priority}>
         <option value="Highest" onChange={() => setInput(input.text, 'Highest')}>
           Highest
         </option>

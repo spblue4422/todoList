@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import TodoInput from '../components/TodoInput';
 import TodoList from '../components/TodoList';
 
-export interface TodoObj {
+export interface TodoItem {
   text: string;
   checked: boolean;
+  id: number;
 }
 
 const ListPageContainer = styled.div`
@@ -13,36 +14,51 @@ const ListPageContainer = styled.div`
 `;
 
 const ListPage: React.FC = () => {
-  const [todos, setTodos] = useState<TodoObj[]>([]);
-  //   const [text, setText] = useState('');
+  const [todos, setTodos] = useState<TodoItem[]>([]);
+  const [text, setText] = useState('');
 
   const addTodo = (text: string) => {
-    const newTodo: TodoObj = {
+    const newTodo: TodoItem = {
       text,
       checked: false,
+      id: todos.length,
     };
     const newTodos = [...todos, newTodo];
     setTodos(newTodos);
   };
 
-  const changeChecked = (index: number) => {
-    // const todo = todos[index];
-    const newTodos = todos.slice();
-    newTodos[index].checked = !newTodos[index].checked;
+  const checkTodo = (id: number) => {
+    const newTodos = todos.filter(item => {
+      if (item.id === id) {
+        item.checked = !item.checked;
+      }
+      return item;
+    });
     setTodos(newTodos);
   };
 
-  const removeTodo = (index: number) => {
+  const modfiyTodo = (id: number) => {
     const newTodos = todos.filter(item => {
-      return todos.indexOf(item) !== index;
+      if (item.id === id) {
+        item.text = text;
+      }
+      return item;
+    });
+    setText('');
+    setTodos(newTodos);
+  };
+
+  const removeTodo = (id: number) => {
+    const newTodos = todos.filter(item => {
+      return item.id !== id;
     });
     setTodos(newTodos);
   };
 
   return (
     <ListPageContainer>
-      <TodoInput addFunc={addTodo}></TodoInput>
-      <TodoList todoList={todos} changeChecked={changeChecked} removeTodo={removeTodo}></TodoList>
+      <TodoInput addFunc={addTodo} inputText={text} setInputText={setText}></TodoInput>
+      <TodoList todoList={todos} checkFunc={checkTodo} modifyFunc={modfiyTodo} removeFunc={removeTodo}></TodoList>
     </ListPageContainer>
   );
 };
